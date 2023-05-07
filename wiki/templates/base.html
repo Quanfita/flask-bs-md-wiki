@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Bootstrap Markdown Wiki</title>
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar-menu.css' ) }}">
+  <style>
+    .fixed-height {
+      height: 100vh; /* 设置元素高度为视口高度 */
+      overflow: auto; /* 当内容超出容器高度时，自动添加竖直方向的滚动条 */
+      /* top: 0px;
+      left: 0px; */
+      position: fixed;
+      /* width: 100%; */
+    }
+  </style>
+</head>
+
+<body>
+    <div class="container-fluit" id="container">
+        <div class="row">
+            <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-12">
+                <ul class="sidebar-menu fixed-height col-xl-2 col-lg-3 col-md-3 col-sm-4 col-12">
+                    <li class="sidebar-header"><h1>BSMD Wiki</h1></li>
+                    <li class="pl-2">
+                        <a href="/">
+                            <span>Home</span>
+                        </a>
+                    </li>
+                        {% for item in menu_tree %}
+                    <li class="pl-2">
+                        {% if item is string %}
+                        {% if item != 'index' %}
+                        <a href="/{{ item }}">{{ item }}</a>
+                        {% endif %}
+                        {% else %}
+                        {% for i in item %}
+                        <a href="#">{{ i }}</a>
+                        <ul class="sidebar-submenu">
+                            {% for j in item[i] %}
+                            <li><a href="/{{i + '/' + j}}"><i class="fa fa-circle-o"></i>{{j}}</a></li>
+                            {% endfor %}
+                        </ul>
+                        {% endfor %}
+                        {% endif %}
+                    </li>
+                        {% endfor %}
+                        <!-- <ul class="sidebar-submenu">
+                            <li><a href="../../index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                            <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                        </ul> -->
+                    <!-- </li> -->
+                </ul>
+            </div>
+            <div class="col-xl-10 col-lg-9 col-md-9 col-sm-8 col-12">
+                <div class="row mt-4 ml-4">
+                    <div class="col-10">
+                        {{ content | safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-light py-3">
+        <div class="container text-center">
+            <p class="mb-0">This page was built with <a href="https://getbootstrap.com/">Bootstrap</a> and <a href="https://jquery.com/">jQuery</a>. &copy; 2023.</p>
+        </div>
+    </footer>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='js/sidebar-menu.js') }}"></script>
+    <script>
+        $.sidebarMenu($('.sidebar-menu'));
+        function adjustFooter() {
+            var windowHeight = window.innerHeight;
+            var contentHeight = document.getElementById("container").offsetHeight;
+            var footerHeight = document.getElementsByTagName("footer")[0].offsetHeight;
+            if (contentHeight + footerHeight < windowHeight) {
+                document.getElementsByTagName("footer")[0].style.position = "fixed";
+                document.getElementsByTagName("footer")[0].style.bottom = 0;
+                document.getElementsByTagName("footer")[0].style.zIndex = -9999;
+                document.getElementsByTagName("footer")[0].style.width = '100%';
+            } else {
+                document.getElementsByTagName("footer")[0].style.position = "static";
+            }
+        }
+
+        //在页面加载时调用它，当页面大小发生变化时也调用它
+        window.onload = adjustFooter;
+        window.onresize = adjustFooter;
+    </script>
+</body>
+
+</html>
