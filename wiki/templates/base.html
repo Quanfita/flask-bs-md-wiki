@@ -25,29 +25,32 @@
             <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4 col-12">
                 <ul class="sidebar-menu fixed-height col-xl-2 col-lg-3 col-md-3 col-sm-4 col-12">
                     <li class="sidebar-header"><h1>BSMD Wiki</h1></li>
-                    <li class="pl-2">
-                        <a href="/">
+                    {% set current_url = request.path %}
+                    <li class="pl-2 {% if url_for('index') == current_url %}active{% endif %}">
+                        <a href="{{ url_for('index') }}">
                             <span>Home</span>
                         </a>
                     </li>
-                        {% for item in menu_tree %}
-                    <li class="pl-2">
-                        {% if item is string %}
-                        {% if item != 'index' %}
+                    {% for item in menu_tree %}
+                    {% set url = url_for('page', path=item) %}
+                    {% if item is string %}
+                    {% if item != 'index' %}
+                    <li class="pl-2 {% if url == current_url %}active{% endif %}">
                         <a href="/{{ item }}">{{ item }}</a>
-                        {% endif %}
-                        {% else %}
-                        {% for i in item %}
+                    {% endif %}
+                    {% else %}
+                    {% for i in item %}
+                    <li class="pl-2 {% if i == path_first %}active{% endif %}">
                         <a href="#">{{ i }}</a>
                         <ul class="sidebar-submenu">
                             {% for j in item[i] %}
-                            <li><a href="/{{i + '/' + j}}"><i class="fa fa-circle-o"></i>{{j}}</a></li>
+                            <li class="{% if url_for('page', path=i+'/'+j) == current_url %}active{% endif %}"><a href="/{{i + '/' + j}}"><i class="fa fa-circle-o"></i>{{j}}</a></li>
                             {% endfor %}
                         </ul>
-                        {% endfor %}
-                        {% endif %}
+                    {% endfor %}
+                    {% endif %}
                     </li>
-                        {% endfor %}
+                    {% endfor %}
                         <!-- <ul class="sidebar-submenu">
                             <li><a href="../../index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
                             <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>

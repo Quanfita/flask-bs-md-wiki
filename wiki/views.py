@@ -22,4 +22,4 @@ class PageView(MethodView):
         content = markdown(text)
         menu_tree = generate_file_tree(MD_DIR)
         print(menu_tree)
-        return render_template('base.html', content=content, menu_tree=menu_tree)
+        return render_template('base.html', content=content, menu_tree=menu_tree, path=path, path_first=path.split('/')[0])
